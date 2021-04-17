@@ -23,3 +23,8 @@ def counter():
 @app.get("/hello/{name}", response_model=HelloResp)
 def hello_name_view(name: str):
     return HelloResp(msg=f"Hello {name}")
+
+
+@app.post("/method")
+def post_method():
+    return {"method": "POST"}

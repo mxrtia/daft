@@ -32,3 +32,5 @@ def test_counter():
     response = client.get(f"/counter")
     assert response.status_code == 200
     assert response.text == "3"
+
+    
