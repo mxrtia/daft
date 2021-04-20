@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import hashlib
 import re
 from fastapi import FastAPI, Response, status, HTTPException
@@ -40,22 +38,22 @@ def get_method():
     return {"method": "GET"}
 
 
-@app.post("/method")
-def get_method():
+@app.post("/method", status_code=201)
+def post_method():
     return {"method": "POST"}
 
 
 @app.delete("/method")
-def get_method():
+def delete_method():
     return {"method": "DELETE"}
     
 @app.put("/method")
-def get_method():
+def put_method():
     return {"method": "PUT"}    
 
 
 @app.options("/method")
-def get_method():
+def options_method():
     return {"method": "OPTIONS"}
   
 
@@ -81,11 +79,20 @@ async def register(item: Item, response: Response):
     item.id=app.id
     item.register_date=date.today()
     
+    # newname=item.name
+    # newsurname=item.surname
+    # r= re.compile('[^a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]')
+    
+    newname = ''.join(filter(str.isalpha, item.name))
+    newsurname = ''.join(filter(str.isalpha, item.surname))
     r= re.compile('[^a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]')
-    item.name = r.sub('', item.name)
-    item.surname = r.sub('', item.surname)
+    
+    newname = r.sub('', item.name)
+    newsurname = r.sub('', item.surname)
 
-    vaccination=len(item.name)+len(item.surname)
+    print(newname)
+    print(newsurname)
+    vaccination=len(newname)+len(newsurname)
     item.vaccination_date=date.today()+timedelta(vaccination)
     
     app.id +=1
