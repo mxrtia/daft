@@ -81,19 +81,10 @@ async def register(item: Item, response: Response):
     item.id=app.id
     item.register_date=date.today()
     
-    # newname=item.name
-    # newsurname=item.surname
-    # r= re.compile('[^a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]')
-    
-    newname = ''.join(filter(str.isalpha, item.name))
-    newsurname = ''.join(filter(str.isalpha, item.surname))
     r= re.compile('[^a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]')
-    
     newname = r.sub('', item.name)
     newsurname = r.sub('', item.surname)
 
-    print(newname)
-    print(newsurname)
     vaccination=len(newname)+len(newsurname)
     item.vaccination_date=date.today()+timedelta(vaccination)
     
