@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import hashlib
-from fastapi import FastAPI, Response, status
+import re
+from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 from typing import Optional
@@ -35,15 +38,34 @@ def hello_name_view(name: str):
 @app.get("/method")
 def get_method():
     return {"method": "GET"}
+
+
+@app.post("/method")
+def get_method():
+    return {"method": "POST"}
+
+
+@app.delete("/method")
+def get_method():
+    return {"method": "DELETE"}
     
+@app.put("/method")
+def get_method():
+    return {"method": "PUT"}    
+
+
+@app.options("/method")
+def get_method():
+    return {"method": "OPTIONS"}
+  
 
 @app.get("/auth")
-def auth_method(password: str, password_hash: str, response: Response):
+def auth_method(password: Optional[str] = None, password_hash: Optional[str] = None):
     hash = hashlib.sha512(password.encode())
     if hash.hexdigest() == password_hash:
-        response.status_code = status.HTTP_204_NO_CONTENT
+        raise HTTPException(status_code=204)
     else:
-        response.status_code = status.HTTP_401_UNAUTHORIZED
+        raise HTTPException(status_code=401)
 
 
 class Item(BaseModel):
@@ -58,6 +80,11 @@ class Item(BaseModel):
 async def register(item: Item, response: Response):
     item.id=app.id
     item.register_date=date.today()
+    
+    r= re.compile('[^a-zA-ZąĄęĘńŃóÓżŻźŹ]')
+    item.name = r.sub('', item.name)
+    item.surname = r.sub('', item.surname)
+
     vaccination=len(item.name)+len(item.surname)
     item.vaccination_date=date.today()+timedelta(vaccination)
     

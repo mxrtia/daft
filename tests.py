@@ -49,18 +49,18 @@ def test_auth():
     
  
 def test_register():
-    response = client.post("/register", json={"name": "Jan", "surname": "Nowak"})
+    response = client.post("/register", json={"name": "żJan", "surname": "ąNowak"})
     assert response.status_code == 201
     today = date.today()
-    todayplus8 = today+timedelta(len('Jan')+len('Nowak'))
+    todayplus8 = today+timedelta(len('żJan')+len('ąNowak'))
     today=today.strftime("%Y-%m-%d")
     todayplus8=todayplus8.strftime("%Y-%m-%d")
-    assert response.json() == {'id': 1, 'name': 'Jan', 'surname': 'Nowak', 'register_date': today, 'vaccination_date': todayplus8}
+    assert response.json() == {'id': 1, 'name': 'żJan', 'surname': 'ąNowak', 'register_date': today, 'vaccination_date': todayplus8}
     
     
 def test_getinfo():
     today = date.today()
-    todayplus8 = today+timedelta(len('Jan')+len('Nowak'))
+    todayplus8 = today+timedelta(len('żJan')+len('ąNowak'))
     today=today.strftime("%Y-%m-%d")
     todayplus8=todayplus8.strftime("%Y-%m-%d")
     
@@ -69,7 +69,7 @@ def test_getinfo():
     
     response = client.get("/patient/1")
     assert response.status_code == 200
-    assert response.json() == {'id': 1, 'name': 'Jan', 'surname': 'Nowak', 'register_date': today, 'vaccination_date': todayplus8}
+    assert response.json() == {'id': 1, 'name': 'żJan', 'surname': 'ąNowak', 'register_date': today, 'vaccination_date': todayplus8}
     
     response = client.get("/patient/100")
     assert response.status_code == 404
