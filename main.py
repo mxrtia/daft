@@ -81,7 +81,7 @@ async def register(item: Item, response: Response):
     item.id=app.id
     item.register_date=date.today()
     
-    r= re.compile('[^a-zA-ZąĄęćĆĘłŁńŃóÓśŚżŻźŹ]')
+    r= re.compile('[^a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]')
     item.name = r.sub('', item.name)
     item.surname = r.sub('', item.surname)
 
