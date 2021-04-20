@@ -60,10 +60,10 @@ def options_method():
 @app.get("/auth")
 def auth_method(password: Optional[str] = None, password_hash: Optional[str] = None):
     hash = hashlib.sha512(password.encode())
-    if hash.hexdigest() == password_hash:
-        raise HTTPException(status_code=204)
-    elif password is None or password_hash is None or len(password)=="" or len(password_hash)=="":
+    if password is None or password_hash is None or len(password)=="" or len(password_hash)=="":
         raise HTTPException(status_code=401)
+    elif hash.hexdigest() == password_hash:
+        return Response(status_code=204)
     else:
         raise HTTPException(status_code=401)
 
