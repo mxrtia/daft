@@ -111,18 +111,18 @@ async def getinfo(id: int, response: Response):
         
 #ZADANIE DOMOWE 3
 
-# #3.1
-# @app.get("/hello", response_class=HTMLResponse)
-    # def hello():
-        # datetoday = date.today()
-        # datetodayf = datetoday.strftime("%Y-%m-%d")
-        # return f"""
-        # <html>
-            # <head>
-                # <h1>Hello! Today date is {{datetodayf}}</h1>
-            # </head>
-        # </html>
-        # """
+#3.1
+@app.get("/hello", response_class=HTMLResponse)
+    def hello():
+        datetoday = date.today()
+        datetodayf = datetoday.strftime("%Y-%m-%d")
+        return f"""
+        <html>
+            <head>
+                <h1>Hello! Today date is {datetodayf}</h1>
+            </head>
+        </html>
+        """
 #3.2
 # @app.post("/login_session")
 # def login_session(user: str, password: str, response: Response):
