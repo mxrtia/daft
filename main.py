@@ -6,6 +6,9 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime, timedelta
 from fastapi.encoders import jsonable_encoder
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+import secrets
+
 
 
 app = FastAPI()
@@ -123,15 +126,22 @@ def hello():
         </head>
     </html>
     """
-#3.2
-# @app.post("/login_session")
-# def login_session(user: str, password: str, response: Response):
+3.2
+@app.post("/login_session")
+def login_session(user: str, password: str, response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.user, "4dm1n")
+    correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if not (correct_username and correct_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    session_token = hashlib.sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
+    app.access_token.append(session_token)
+    response.set_cookie(key="session_token", value=session_token)
     # if user== "4dm1n" and password == "NotSoSecurePa$$":
-        # session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-        # app.access_token.append(session_token)
-        # response.set_cookie(key="session_token", value=session_token)
+    #     session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
+    #     app.access_token.append(session_token)
+    #     response.set_cookie(key="session_token", value=session_token)
     # else:
-        # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 # @app.post("/login_token", response_class=JSONResponse)
 # def login_token():
