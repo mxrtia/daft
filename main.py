@@ -173,7 +173,7 @@ def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None
     elif format is not None and format=="html":
         return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
     else:
-        return Response(content="Welcome!", status_code=status.HTTP_200_OK)
+        return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
 
 @app.get("/welcome_token")
 def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
@@ -184,7 +184,7 @@ def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
     elif format is not None and format=="html":
         return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
     else:
-        return Response(content="Welcome!", status_code=status.HTTP_200_OK)
+        return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
 
         
         
