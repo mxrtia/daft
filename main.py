@@ -136,6 +136,8 @@ def hello():
 def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if credentials.username==None or credentials.password==None or credentials.username=="" or credentials.password=="":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if not (correct_username and correct_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
