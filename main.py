@@ -138,9 +138,11 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
     if not (correct_username and correct_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()
-    app.access_token.append(session_token)
-    response.set_cookie(key="session_token", value=session_token)
+    else:
+        session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()
+        app.access_token.append(session_token)
+        response.set_cookie(key="session_token", value=session_token)
+        response.status_code = status.HTTP_201_CREATED
 
 @app.post("/login_token", response_class=JSONResponse)
 def login_token(credentials: HTTPBasicCredentials = Depends(security)):
