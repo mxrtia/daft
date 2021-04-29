@@ -1,6 +1,6 @@
 import hashlib
 import re
-from fastapi import FastAPI, Response, status, HTTPException, Depends
+from fastapi import FastAPI, Response, status, HTTPException, Depends, Cookie
 from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 from pydantic import BaseModel
 from typing import Optional
@@ -18,8 +18,8 @@ app.list = []
 
 security = HTTPBasic()
 
-app.access_token=[]
-app.login_token=[]
+app.access_token=""
+app.login_token=""
 
 class HelloResp(BaseModel):
     msg: str
@@ -131,7 +131,7 @@ def hello():
         </head>
     </html>
     """
-3.2
+#3.2
 @app.post("/login_session")
 def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
@@ -142,9 +142,10 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()
-        app.access_token.append(session_token)
+        app.access_token=session_token
         response.set_cookie(key="session_token", value=session_token)
         response.status_code = status.HTTP_201_CREATED
+        print(session_token)
 
 @app.post("/login_token", response_class=JSONResponse)
 def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
@@ -156,19 +157,38 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()
-        app.access_token.append(token_value)
+        app.access_token=token_value
         response.status_code = status.HTTP_201_CREATED
         return {"token": token_value}
 
-
-    # token_value = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-    # if user== "4dm1n" and password == "NotSoSecurePa$$":
-    #     return f{"token": {token_value}}    
-    # else:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-
 #3.3
+@app.get("/welcome_session")
+def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
+    if not app.access_token==session_token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    else:
+        if format==None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        if format=="json":
+            return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
+        elif format=="html":
+            return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
+        else:
+            return Response(content="Welcome!", status_code=status.HTTP_200_OK)
+
+@app.get("/welcome_token")
+def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
+    if not app.login_token==token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    else:
+        if format==None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        if format=="json":
+            return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
+        elif format=="html":
+            return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
+        else:
+            return Response(content="Welcome!", status_code=status.HTTP_200_OK)
 
         
         
