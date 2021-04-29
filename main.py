@@ -166,23 +166,19 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
 #3.3
 @app.get("/welcome_session")
 def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-    if not app.access_token==session_token:
-    # if session_token is None or not app.access_token==session_token:
+    if session_token is None or not app.access_token==session_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    check=False if format==None else True
-    if check and format=="json":
+    if format=="json":
         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
-    elif check and format=="html":
+    elif format=="html":
         return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
     else:
         return Response(content="Welcome!", status_code=status.HTTP_200_OK)
 
 @app.get("/welcome_token")
 def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
-    if not app.login_token==token:
+    if token is None or not app.login_token==token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    # if format==None:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if format=="json":
         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
     elif format=="html":
