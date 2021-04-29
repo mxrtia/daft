@@ -124,22 +124,22 @@ async def getinfo(id: int, response: Response):
         </html>
         """
 #3.2
-@app.post("/login_session")
-def login_session(user: str, password: str, response: Response):
-    if user== "4dm1n" and password == "NotSoSecurePa$$":
-        session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-        app.access_token.append(session_token)
-        response.set_cookie(key="session_token", value=session_token)
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+# @app.post("/login_session")
+# def login_session(user: str, password: str, response: Response):
+    # if user== "4dm1n" and password == "NotSoSecurePa$$":
+        # session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
+        # app.access_token.append(session_token)
+        # response.set_cookie(key="session_token", value=session_token)
+    # else:
+        # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-@app.post("/login_token", response_class=JSONResponse)
-def login_token():
-    token_value = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-    if user== "4dm1n" and password == "NotSoSecurePa$$":
-        return f{"token": {token_value}}    
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+# @app.post("/login_token", response_class=JSONResponse)
+# def login_token():
+    # token_value = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
+    # if user== "4dm1n" and password == "NotSoSecurePa$$":
+        # return f{"token": {token_value}}    
+    # else:
+        # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
         
         
         
