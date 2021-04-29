@@ -146,6 +146,7 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
         response.set_cookie(key="session_token", value=session_token)
         response.status_code = status.HTTP_201_CREATED
         print(session_token)
+        print("access token",app.access_token)
 
 @app.post("/login_token", response_class=JSONResponse)
 def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
@@ -157,38 +158,37 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()
-        app.access_token=token_value
+        app.login_token=token_value
         response.status_code = status.HTTP_201_CREATED
+        print("login token",app.login_token)
         return {"token": token_value}
 
 #3.3
 @app.get("/welcome_session")
 def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
     if not app.access_token==session_token:
+    # if session_token is None or not app.access_token==session_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    check=False if format==None else True
+    if check and format=="json":
+        return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
+    elif check and format=="html":
+        return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
     else:
-        if format==None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-        if format=="json":
-            return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
-        elif format=="html":
-            return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
-        else:
-            return Response(content="Welcome!", status_code=status.HTTP_200_OK)
+        return Response(content="Welcome!", status_code=status.HTTP_200_OK)
 
 @app.get("/welcome_token")
 def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
     if not app.login_token==token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    # if format==None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if format=="json":
+        return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
+    elif format=="html":
+        return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
     else:
-        if format==None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-        if format=="json":
-            return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
-        elif format=="html":
-            return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
-        else:
-            return Response(content="Welcome!", status_code=status.HTTP_200_OK)
+        return Response(content="Welcome!", status_code=status.HTTP_200_OK)
 
         
         
