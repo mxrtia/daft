@@ -163,6 +163,7 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
         print("login token",app.login_token)
         return {"token": token_value}
 
+
 #3.3
 @app.get("/welcome_session")
 def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
@@ -186,6 +187,34 @@ def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
     else:
         return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
 
-        
+
+#3.4
+@app.delete("/logout_session", response_class=RedirectResponse)
+def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)):
+    if session_token is None or not app.access_token==session_token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    app.login_token=""
+    response = RedirectResponse(url='/logged_out')
+    status_code=status.HTTP_302_FOUND
+    return response, status_code
+
+@app.delete("/logout_token")
+def logout_token(format: Optional[str]=None, token: Optional[str]=None):
+    if token is None or not app.login_token==token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    app.login_token=""
+    response = RedirectResponse(url='/logged_out')
+    status_code=status.HTTP_302_FOUND
+    return response, status_code
+
+@app.get("/logged_out")
+def logged_out(format: Optional[str]=None):
+    if format is not None and format=="json":
+        return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
+    elif format is not None and format=="html":
+        return HTMLResponse(content="<h1>Logged out!</h1>", status_code=status.HTTP_200_OK)
+    else:
+        return Response(content="Logged out!", status_code=status.HTTP_200_OK, media_type="text/plain")
+    
         
         
