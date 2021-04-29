@@ -16,6 +16,8 @@ app.counter = 0
 app.id = 1
 app.list = []
 
+security = HTTPBasic()
+
 class HelloResp(BaseModel):
     msg: str
 
