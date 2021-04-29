@@ -130,12 +130,12 @@ def hello():
     """
 3.2
 @app.post("/login_session")
-def login_session(user: str, password: str, response: Response, credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.user, "4dm1n")
+def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
     if not (correct_username and correct_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    session_token = hashlib.sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
+    session_token = hashlib.sha256(f"{credentials.username}{credentials.password}{app.secret_key}".encode()).hexdigest()
     app.access_token.append(session_token)
     response.set_cookie(key="session_token", value=session_token)
     # if user== "4dm1n" and password == "NotSoSecurePa$$":
@@ -152,6 +152,10 @@ def login_session(user: str, password: str, response: Response, credentials: HTT
         # return f{"token": {token_value}}    
     # else:
         # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+
+#3.3
+
         
         
         
