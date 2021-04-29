@@ -1,6 +1,6 @@
 import hashlib
 import re
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import FastAPI, Response, status, HTTPException, Depends
 from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 from pydantic import BaseModel
 from typing import Optional
