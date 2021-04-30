@@ -194,11 +194,11 @@ def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)
     if session_token is None or not app.access_token==session_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
-        app.login_token=""
+        app.access_token=""
         return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
 
 @app.delete("/logout_token")
-def logout_token(format: Optional[str]=None, token: Optional[str]=None):
+def logout_token(token: Optional[str]=None, format: Optional[str]=None):
     if token is None or not app.login_token==token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
