@@ -195,10 +195,7 @@ def logout_session(session_token: str = Cookie(None)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         app.login_token=""
-        # response = RedirectResponse(url='/logged_out')
-        # status_code=status.HTTP_302_FOUND
-        # return response, status_code
-        return RedirectResponse(url="/logged_out", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
 
 @app.delete("/logout_token", response_class=RedirectResponse)
 def logout_token(token: Optional[str]=None):
@@ -206,17 +203,11 @@ def logout_token(token: Optional[str]=None):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         app.login_token=""
-        # response = RedirectResponse(url='/logged_out')
-        # status_code=status.HTTP_302_FOUND
-        # return response, status_code
-        return RedirectResponse(url="/logged_out", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/logged_out")
 def logged_out(format: Optional[str]=None):
-# def logged_out(format: Optional[str]=None, token: Optional[str]=None):
-    # if token is None or not app.login_token==token:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if format is not None and format=="json":
         return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
     elif format is not None and format=="html":
