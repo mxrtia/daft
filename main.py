@@ -8,28 +8,7 @@ from datetime import date, datetime, timedelta
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
-from fastapi import FastAPI, Response, Request, status, Cookie
-from typing import Optional
-from pydantic import BaseModel
-import hashlib
-from hashlib import sha256
-from datetime import datetime, timedelta
-from fastapi.templating import Jinja2Templates
-from fastapi import Depends, FastAPI, HTTPException
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from starlette.status import HTTP_401_UNAUTHORIZED
-from fastapi.responses import PlainTextResponse, RedirectResponse, HTMLResponse
-import random
 
-app = FastAPI()
-app.id = 0
-app.persons = []
-templates = Jinja2Templates(directory="templates")
-app.secret_key = "vsd;lgj[op"
-app.access_token_s = []
-app.access_token_c = []
-random.seed(datetime.now())
-security = HTTPBasic()
 
 app = FastAPI()
 app.counter = 0
@@ -242,181 +221,102 @@ def hello():
 
 ##
 
-# @app.post("/login_session")
-# def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
-#     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
-#     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
-#     if credentials.username==None or credentials.password==None or credentials.username=="" or credentials.password=="":
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     if not (correct_username and correct_password):
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     else:
-#         datetoday = date.today()
-#         session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+datetoday.strftime("%Y-%m-%d")
-#         # app.access_token.append(session_token)
-#         if len(app.access_token)>3:
-#             app.access_token.pop(0)
-#             app.access_token.append(session_token)
-#         else:
-#             app.access_token.append(session_token)
-#         response.set_cookie(key="session_token", value=session_token)
-#         response.status_code = status.HTTP_201_CREATED
-#         print(session_token)
-#         print("access token",app.access_token)
-
-# @app.post("/login_token", response_class=JSONResponse)
-# def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
-#     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
-#     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
-#     if not (correct_username and correct_password):
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     if not (correct_username and correct_password):
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     else:
-#         datetoday = date.today()
-#         token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+datetoday.strftime("%Y-%m-%d")
-#         # app.login_token=token_value
-#         if len(app.login_token)>3:
-#             app.login_token.pop(0)
-#             app.login_token.append(token_value)
-#         else:
-#             app.login_token.append(token_value)
-#         response.status_code = status.HTTP_201_CREATED
-#         print("login token",app.login_token)
-#         return {"token": token_value}
-
-# ##
-
-# @app.get("/welcome_session")
-# def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-#     if session_token == None or session_token == "" or session_token not in app.access_token or format == None or format == "":
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     if format is not None and format=="json":
-#         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
-#     elif format is not None and format=="html":
-#         return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
-#     else:
-#         return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
-
-# @app.get("/welcome_token")
-# def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
-#     if token == None or token not in app.login_token or format == None:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     if format is not None and format=="json":
-#         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
-#     elif format is not None and format=="html":
-#         return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
-#     else:
-#         return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
-
-# ##
-
-# @app.delete("/logout_session")
-# def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-#     if session_token == None or session_token not in app.access_token:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     else:
-#         app.access_token.remove(session_token)
-#         return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
-
-# @app.delete("/logout_token")
-# def logout_token(token: Optional[str]=None, format: Optional[str]=None):
-#     if token == None or token not in app.login_token:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     else:
-#         app.login_token.remove(token)
-#         return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
-
-# @app.get("/logged_out")
-# def logged_out(format: Optional[str]=None):
-#     if format == None:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-#     if format is not None and format=="json":
-#         return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
-#     elif format is not None and format=="html":
-#         return HTMLResponse(content="<h1>Logged out!</h1>", status_code=status.HTTP_200_OK)
-#     else:
-#         return Response(content="Logged out!", status_code=status.HTTP_200_OK, media_type="text/plain")
-
 @app.post("/login_session")
-def log_session( response: Response, credentials: HTTPBasicCredentials = Depends(security)):
-	if credentials.username != "4dm1n" or credentials.password != "NotSoSecurePa$$":
-		response.status_code = 401
-	else:
-		random_val = str(random.randint(0, 1000))
-		session_token = sha256(f"{credentials.username}{credentials.password}{random_val}".encode()).hexdigest()
-		if session_token not in app.access_token_c:
-			if (len(app.access_token_c) > 2):
-				app.access_token_c.pop(0)
-			app.access_token_c.append(session_token)
-		response.status_code = 201
-		response.set_cookie(key="session_token", value=session_token)
-		return app.access_token_c
+def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "4dm1n")
+    correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if credentials.username==None or credentials.password==None or credentials.username=="" or credentials.password=="":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if not (correct_username and correct_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    else:
+        datetoday = date.today()
+        session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+datetoday.strftime("%Y-%m-%d")
+        # app.access_token.append(session_token)
+        if len(app.access_token)>3:
+            app.access_token.pop(0)
+            app.access_token.append(session_token)
+        else:
+            app.access_token.append(session_token)
+        response.set_cookie(key="session_token", value=session_token)
+        response.status_code = status.HTTP_201_CREATED
+        print(session_token)
+        print("access token",app.access_token)
 
+@app.post("/login_token", response_class=JSONResponse)
+def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "4dm1n")
+    correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if not (correct_username and correct_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if not (correct_username and correct_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    else:
+        datetoday = date.today()
+        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+datetoday.strftime("%Y-%m-%d")
+        # app.login_token=token_value
+        if len(app.login_token)>3:
+            app.login_token.pop(0)
+            app.login_token.append(token_value)
+        else:
+            app.login_token.append(token_value)
+        response.status_code = status.HTTP_201_CREATED
+        print("login token",app.login_token)
+        return {"token": token_value}
 
-@app.post("/login_token")
-def log_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
-	if credentials.username != "4dm1n" or credentials.password != "NotSoSecurePa$$":
-		response.status_code = 401
-	else:
-		random_val = str(random.randint(0, 1000))
-		session_token = sha256(f"{credentials.username}{credentials.password}{random_val}".encode()).hexdigest()
-		if session_token not in app.access_token_s:
-			if (len(app.access_token_s) > 2):
-				app.access_token_s.pop(0)
-			app.access_token_s.append(session_token)
-		response.status_code = 201
-		return {"token": session_token}
-
-@app.delete("/logout_session")
-def logout_session(request: Request, response: Response, format: Optional[str] = "plain", session_token: str = Cookie(None)):
-	if session_token not in app.access_token_c:
-		raise HTTPException(status_code=401, detail="Unathorised")
-	else:
-		app.access_token_c.remove(session_token)
-		return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
-
-@app.delete("/logout_token")
-def logout_token(request: Request, response: Response, token: str, format: Optional[str] = "plain"):
-	if token not in app.access_token_s:
-		raise HTTPException(status_code=401, detail="Unathorised")
-	else:
-		app.access_token_s.remove(token)
-		return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
-
-@app.get("/logged_out")
-def logged_out(request: Request,response: Response, format: str):
-	if format == "json":
-		return {"message": "Logged out!"}
-	elif format == "html":
-		return templates.TemplateResponse("logged_out.html.j2", {"request": request})
-	else:
-		return PlainTextResponse(content="Welcome!", status_code=200)
-
+##
 
 @app.get("/welcome_session")
-def welcome_session(format: Optional[str] = None, session_token: str = Cookie(None)):
-	if session_token not in app.access_token_c:
-		raise HTTPException(status_code=401, detail="Unathorised")
-	else:
-		if format == "json":
-			return {"message": "Welcome!"}
-		elif format == "html":
-			return HTMLResponse(content="<h1>Welcome!</h1>", status_code=200)
-		else:
-			return PlainTextResponse(content="Welcome!", status_code=200)
-
+def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
+    if session_token == None or session_token == "" or session_token not in app.access_token or format == None or format == "":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if format is not None and format=="json":
+        return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
+    elif format is not None and format=="html":
+        return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
+    else:
+        return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
 
 @app.get("/welcome_token")
-def welcome_token(token: str, format: Optional[str] = None):
-	if token not in app.access_token_s:
-		raise HTTPException(status_code=401, detail="Unathorised")
-	else:
-		if format == "json":
-			return {"message": "Welcome!"}
-		elif format == "html":
-			return HTMLResponse(content="<h1>Welcome!</h1>", status_code=200)
-		else:
-			return PlainTextResponse(content="Welcome!", status_code=200)
+def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
+    if token == None or token not in app.login_token or format == None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if format is not None and format=="json":
+        return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
+    elif format is not None and format=="html":
+        return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
+    else:
+        return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
+
+##
+
+@app.delete("/logout_session")
+def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)):
+    if session_token == None or session_token not in app.access_token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    else:
+        app.access_token.remove(session_token)
+        return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
+
+@app.delete("/logout_token")
+def logout_token(token: Optional[str]=None, format: Optional[str]=None):
+    if token == None or token not in app.login_token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    else:
+        app.login_token.remove(token)
+        return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
+
+@app.get("/logged_out")
+def logged_out(format: Optional[str]=None):
+    if format == None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if format is not None and format=="json":
+        return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
+    elif format is not None and format=="html":
+        return HTMLResponse(content="<h1>Logged out!</h1>", status_code=status.HTTP_200_OK)
+    else:
+        return Response(content="Logged out!", status_code=status.HTTP_200_OK, media_type="text/plain")
+
+
 
           
