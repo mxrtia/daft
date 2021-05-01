@@ -268,7 +268,7 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
 
 @app.get("/welcome_session")
 def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-    if session_token is None or session_token not in app.access_token or format is None:
+    if session_token == None or session_token == "" or session_token not in app.access_token or format == None or format == "":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if format is not None and format=="json":
         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
@@ -279,7 +279,7 @@ def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None
 
 @app.get("/welcome_token")
 def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
-    if token is None or token not in app.login_token or format is None:
+    if token == None or token not in app.login_token or format == None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if format is not None and format=="json":
         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
@@ -292,7 +292,7 @@ def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
 
 @app.delete("/logout_session")
 def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-    if session_token is None or session_token not in app.access_token:
+    if session_token == None or session_token not in app.access_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         app.access_token.remove(session_token)
@@ -300,7 +300,7 @@ def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)
 
 @app.delete("/logout_token")
 def logout_token(token: Optional[str]=None, format: Optional[str]=None):
-    if token is None or token not in app.login_token:
+    if token == None or token not in app.login_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         app.login_token.remove(token)
@@ -308,7 +308,7 @@ def logout_token(token: Optional[str]=None, format: Optional[str]=None):
 
 @app.get("/logged_out")
 def logged_out(format: Optional[str]=None):
-    if format is None:
+    if format == None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if format is not None and format=="json":
         return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
