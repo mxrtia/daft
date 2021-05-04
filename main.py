@@ -230,8 +230,9 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
     if not (correct_username and correct_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
-        datetoday = date.today()
-        session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+datetoday.strftime("%Y-%m-%d")
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
+        session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string
         # app.access_token.append(session_token)
         if len(app.access_token)>3:
             app.access_token.pop(0)
@@ -252,8 +253,9 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
     if not (correct_username and correct_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
-        datetoday = date.today()
-        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+datetoday.strftime("%Y-%m-%d")
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
+        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string
         # app.login_token=token_value
         if len(app.login_token)>3:
             app.login_token.pop(0)
