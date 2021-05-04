@@ -255,7 +255,7 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
     else:
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
-        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string
+        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string+dt_string
         # app.login_token=token_value
         if len(app.login_token)>3:
             app.login_token.pop(0)
