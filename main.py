@@ -226,9 +226,9 @@ def hello():
 def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
-    if credentials.username==None or credentials.password==None or credentials.username=="" or credentials.password=="":
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    if not (correct_username and correct_password):
+    # if credentials.username==None or credentials.password==None or credentials.username=="" or credentials.password=="":
+    #     raise HTTPException(status_code=sta tus.HTTP_401_UNAUTHORIZED)
+    if not (correct_username or correct_password):  #and
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         now = datetime.now()
@@ -240,12 +240,12 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
         else:
             app.access_token.append(session_token)
         response.set_cookie(key="session_token", value=session_token)
-        response.status_code = status.HTTP_201_CREATED
-        print(session_token)
-        print("access token",app.access_token)
+        # response.status_code = status.HTTP_201_CREATED
+        #print(session_token)
+        #print("access token",app.access_token)
 
 @app.post("/login_token", status_code = status.HTTP_201_CREATED)
-def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+def login_token(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
     if not (correct_username and correct_password):
@@ -260,8 +260,8 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
             app.login_token.append(token_value)
         else:
             app.login_token.append(token_value)
-        response.status_code = status.HTTP_201_CREATED
-        print("login token",app.login_token)
+        # response.status_code = status.HTTP_201_CREATED
+        #print("login token",app.login_token)
         return {"token": token_value}
 
 ##
