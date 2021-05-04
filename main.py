@@ -250,8 +250,6 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
     if not (correct_username and correct_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    if not (correct_username and correct_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
@@ -310,9 +308,9 @@ def logout_token(token: Optional[str]=None, format: Optional[str]=None):
 def logged_out(format: Optional[str]=None):
     if format == None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    if format is not None and format=="json":
+    elif format=="json":
         return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
-    elif format is not None and format=="html":
+    elif format=="html":
         return HTMLResponse(content="<h1>Logged out!</h1>", status_code=status.HTTP_200_OK)
     else:
         return Response(content="Logged out!", status_code=status.HTTP_200_OK, media_type="text/plain")
