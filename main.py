@@ -306,9 +306,9 @@ def logout_token(token: Optional[str]=None, format: Optional[str]=None):
 
 @app.get("/logged_out")
 def logged_out(format: Optional[str]=None):
-    if format == None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    elif format=="json":
+    # if format == None:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    if format=="json":
         return JSONResponse(content={"message": "Logged out!"}, status_code=status.HTTP_200_OK)
     elif format=="html":
         return HTMLResponse(content="<h1>Logged out!</h1>", status_code=status.HTTP_200_OK)
