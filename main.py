@@ -222,7 +222,7 @@ def hello():
 
 ##
 
-@app.post("/login_session")
+@app.post("/login_session", status_code = status.HTTP_201_CREATED)
 def login_session(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
@@ -244,7 +244,7 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
         print(session_token)
         print("access token",app.access_token)
 
-@app.post("/login_token", response_class=JSONResponse)
+@app.post("/login_token", status_code = status.HTTP_201_CREATED)
 def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
@@ -270,7 +270,7 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
 
 @app.get("/welcome_session")
 def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-    if session_token == None or session_token == "" or not session_token in app.access_token or format == None or format == "":
+    if session_token == None or session_token is None or session_token == "" or not session_token in app.access_token or format == None or format == "":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if format is not None and format=="json":
         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
@@ -281,11 +281,11 @@ def welcome_session(format: Optional[str]=None, session_token: str = Cookie(None
 
 @app.get("/welcome_token")
 def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
-    if token == None or not token in app.login_token or format == None:
+    if token == None or token is None or token == "" or not token in app.login_token or format == None or format == "":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    if format is not None and format=="json":
+    if format != None and format=="json":
         return JSONResponse(content={"message": "Welcome!"}, status_code=status.HTTP_200_OK)
-    elif format is not None and format=="html":
+    elif format != None and format=="html":
         return HTMLResponse(content="<h1>Welcome!</h1>", status_code=status.HTTP_200_OK)
     else:
         return Response(content="Welcome!", status_code=status.HTTP_200_OK, media_type="text/plain")
