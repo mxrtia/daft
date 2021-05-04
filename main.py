@@ -294,19 +294,17 @@ def welcome_token(format: Optional[str]=None, token: Optional[str]=None):
 
 @app.delete("/logout_session")
 def logout_session(format: Optional[str]=None, session_token: str = Cookie(None)):
-    if session_token == None or not session_token in app.access_token:
+    if session_token is None or not session_token in app.access_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    else:
-        app.access_token.remove(session_token)
-        return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
+    app.access_token.remove(session_token)
+    return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
 
 @app.delete("/logout_token")
 def logout_token(token: Optional[str]=None, format: Optional[str]=None):
-    if token == None or not token in app.login_token:
+    if token is None or not token in app.login_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    else:
-        app.login_token.remove(token)
-        return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
+    app.login_token.remove(token)
+    return RedirectResponse(url=f"/logged_out?format={format}", status_code=status.HTTP_302_FOUND)
 
 @app.get("/logged_out")
 def logged_out(format: Optional[str]=None):
