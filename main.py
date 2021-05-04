@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
+import random
 
 
 app = FastAPI()
@@ -232,7 +233,7 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
     else:
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
-        session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string
+        session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string+str(random.randrange(1000, 2000))
         # app.access_token.append(session_token)
         if len(app.access_token)>3:
             app.access_token.pop(0)
@@ -255,7 +256,7 @@ def login_token(response: Response, credentials: HTTPBasicCredentials = Depends(
     else:
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
-        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string+dt_string
+        token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string+str(random.randrange(0, 999))	
         # app.login_token=token_value
         if len(app.login_token)>3:
             app.login_token.pop(0)
