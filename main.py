@@ -234,11 +234,10 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
         session_token = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string+str(random.randrange(1000, 2000))
-        if len(app.access_token)>3:
+        if len(app.access_token)>2:
             app.access_token.pop(0)
-            app.access_token.append(session_token)
-        else:
-            app.access_token.append(session_token)
+        app.access_token.append(session_token)
+        
         response.set_cookie(key="session_token", value=session_token)
         # response.status_code = status.HTTP_201_CREATED
         #print(session_token)
@@ -248,18 +247,16 @@ def login_session(response: Response, credentials: HTTPBasicCredentials = Depend
 def login_token(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, "4dm1n")
     correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
-    if not (correct_username and correct_password):
+    if not (correct_username or correct_password): #and
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y/%H/%M/%S")
         token_value = hashlib.sha256(f"{credentials.username}{credentials.password}".encode()).hexdigest()+dt_string+str(random.randrange(0, 999))	
         # app.login_token=token_value
-        if len(app.login_token)>3:
+        if len(app.login_token)>2:
             app.login_token.pop(0)
-            app.login_token.append(token_value)
-        else:
-            app.login_token.append(token_value)
+        app.login_token.append(token_value)
         # response.status_code = status.HTTP_201_CREATED
         #print("login token",app.login_token)
         return {"token": token_value}
