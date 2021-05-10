@@ -354,18 +354,20 @@ async def products(id: int, response: Response):
 
 #4.3
 @app.get("/employees", status_code = status.HTTP_200_OK)
-async def employees(limit: Optional[int] = 10000, offset: Optional[int] = 0, order: Optional[str] = "id"):
+async def employees(response: Response, limit: Optional[int] = 10000, offset: Optional[int] = 0, order: Optional[str] = "id"):
     app.db_connection.row_factory = sqlite3.Row
     dict = {"id": "EmployeeID", "last_name": "LastName", "first_name": "FirstName", "city": "City"}
-    
-    employees = app.db_connection.execute(
-        f'''SELECT EmployeeID, LastName, FirstName, City 
-        FROM Employees
-        ORDER BY {dict[order]}
-        LIMIT {limit}
-        OFFSET {offset}
-        '''
-        ).fetchall()
-    return {"employees": [{"id": x["EmployeeID"], "last_name": f"{x['LastName']}", "first_name": f"{x['FirstName']}", "city": f"{x['City']}"} for x in employees]}
-    
+    if order in dict:
+        employees = app.db_connection.execute(
+            f'''SELECT EmployeeID, LastName, FirstName, City 
+            FROM Employees
+            ORDER BY {dict[order]}
+            LIMIT {limit}
+            OFFSET {offset}
+            '''
+            ).fetchall()
+        return {"employees": [{"id": x["EmployeeID"], "last_name": f"{x['LastName']}", "first_name": f"{x['FirstName']}", "city": f"{x['City']}"} for x in employees]}
+    else:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+
 
