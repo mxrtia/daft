@@ -356,7 +356,7 @@ async def products(id: int, response: Response):
 @app.get("/employees", status_code = status.HTTP_200_OK)
 async def employees(limit: Optional[int] = 10000, offset: Optional[int] = 0, order: Optional[str] = "id"):
     app.db_connection.row_factory = sqlite3.Row
-    dict = {"id": "EmployeeID", "last_name": "LastName", "first_name": "LastName", "city": "City"}
+    dict = {"id": "EmployeeID", "last_name": "LastName", "first_name": "FirstName", "city": "City"}
     
     employees = app.db_connection.execute(
         f'''SELECT EmployeeID, LastName, FirstName, City 
