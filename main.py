@@ -313,5 +313,26 @@ def logged_out(format: Optional[str]=None):
         return Response(content="Logged out!", status_code=status.HTTP_200_OK, media_type="text/plain")
 
 
+import sqlite3
+@app.on_event("startup")
+async def startup():
+    app.db_connection = sqlite3.connect("northwind.db")
+    app.db_connection.text_factory = lambda b: b.decode(errors="ignore")  # northwind specific 
 
-          
+
+@app.on_event("shutdown")
+async def shutdown():
+    app.db_connection.close()
+
+@app.get("/categories", status_code = status.HTTP_200_OK)
+async def categories():
+    app.db_connection.row_factory = sqlite3.Row
+    categories = app.db_connection.execute("SELECT CategoryID, CategoryName FROM Categories ORDER BY CategoryID").fetchall()
+    return {"categories": [{"id": x["CategoryID"], "name": f"{x['CategoryName']}"} for x in categories]}
+
+@app.get("/customers", status_code = status.HTTP_200_OK)
+async def customers():
+    app.db_connection.row_factory = sqlite3.Row
+    customers = app.db_connection.execute("SELECT CustomerID, CompanyName, (COALESCE(Address, '') || ' ' || COALESCE(PostalCode, '') || ' ' || COALESCE(City, '') || ' ' || COALESCE(Country, '')) AS xx FROM Customers ORDER BY CustomerID").fetchall()
+    return {"customers": [{"id": x["CustomerID"], "name": f"{x['CompanyName']}", "full_address": f"{x['xx']}"} for x in customers]}
+    
