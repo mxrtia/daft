@@ -333,6 +333,6 @@ async def categories():
 @app.get("/customers", status_code = status.HTTP_200_OK)
 async def customers():
     app.db_connection.row_factory = sqlite3.Row
-    customers = app.db_connection.execute("SELECT CustomerID, CompanyName, (COALESCE(Address, '') || ' ' || COALESCE(PostalCode, '') || ' ' || COALESCE(City, '') || ' ' || COALESCE(Country, '')) AS xx FROM Customers ORDER BY CustomerID").fetchall()
+    customers = app.db_connection.execute("SELECT CustomerID, CompanyName, (COALESCE(Address, '') || ' ' || COALESCE(PostalCode, '') || ' ' || COALESCE(City, '') || ' ' || COALESCE(Country, '')) AS xx FROM Customers ORDER BY UPPER(CustomerID)").fetchall()
     return {"customers": [{"id": x["CustomerID"], "name": f"{x['CompanyName']}", "full_address": f"{x['xx']}"} for x in customers]}
     
