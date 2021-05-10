@@ -324,6 +324,8 @@ async def startup():
 async def shutdown():
     app.db_connection.close()
 
+#4.1
+
 @app.get("/categories", status_code = status.HTTP_200_OK)
 async def categories():
     app.db_connection.row_factory = sqlite3.Row
@@ -336,3 +338,17 @@ async def customers():
     customers = app.db_connection.execute("SELECT CustomerID, CompanyName, (COALESCE(Address, '') || ' ' || COALESCE(PostalCode, '') || ' ' || COALESCE(City, '') || ' ' || COALESCE(Country, '')) AS xx FROM Customers ORDER BY UPPER(CustomerID)").fetchall()
     return {"customers": [{"id": x["CustomerID"], "name": f"{x['CompanyName']}", "full_address": f"{x['xx']}"} for x in customers]}
     
+
+#4.2
+@app.get("/products/{id}", status_code = status.HTTP_200_OK)
+async def products(id: int, response: Response):
+    app.db_connection.row_factory = sqlite3.Row
+    isidindb = app.db_connection.execute(f"SELECT ProductID FROM Products WHERE ProductID={id}").fetchone()
+    if isidindb:
+        response.status_code = status.HTTP_200_OK
+        product = app.db_connection.execute(f"SELECT ProductID, ProductName FROM products WHERE ProductID={id}").fetchone()
+        return [{"id": product["ProductID"], "name": f"{product['ProductName']}"}]
+    else:
+        response.status_code = status.HTTP_404_NOT_FOUND
+            
+
