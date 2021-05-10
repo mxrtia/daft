@@ -347,7 +347,7 @@ async def products(id: int, response: Response):
     if isidindb:
         response.status_code = status.HTTP_200_OK
         product = app.db_connection.execute(f"SELECT ProductID, ProductName FROM products WHERE ProductID={id}").fetchone()
-        return [{"id": product["ProductID"], "name": f"{product['ProductName']}"}]
+        return {"id": product["ProductID"], "name": f"{product['ProductName']}"}
     else:
         response.status_code = status.HTTP_404_NOT_FOUND
             
