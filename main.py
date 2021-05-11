@@ -395,3 +395,22 @@ async def products_orders(id: int, response: Response):
         return {"orders": [x for x in product]}
     else:
         response.status_code = status.HTTP_404_NOT_FOUND
+
+#4.6
+class Itemm(BaseModel):
+    name: str
+
+@app.post("/categories", status_code = status.HTTP_201_CREATED)
+async def categories_post(itemm: Itemm):   
+    cats = app.db_connection.execute(f'''INSERT INTO Categories (CategoryName) VALUES ('{itemm.name}')''')
+    app.db_connection.commit()
+    new_id = cats.lastrowid
+    app.db_connection.row_factory = sqlite3.Row
+    itemm = app.db_connection.execute("""SELECT CategoryID AS category_id, CategoryName AS category_name 
+    FROM Categories 
+    WHERE CategoryID = ?""", (new_id, )).fetchone()
+
+    # return {"id": cats.lastrowid, "name": item.name}
+    return itemm
+    
+# @app.
