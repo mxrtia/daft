@@ -371,11 +371,21 @@ async def employees(response: Response, limit: Optional[int] = 10000, offset: Op
         response.status_code = status.HTTP_400_BAD_REQUEST
 
 #4.4
-@app.get("/products_extended", status_code = status.HTTP_200_OK)
+# @app.get("/products_extended", status_code = status.HTTP_200_OK)
+# async def products_extended():
+#     app.db_connection.row_factory = sqlite3.Row
+#     products_ext = app.db_connection.execute(f'''SELECT ProductID, ProductName, CategoryName, CompanyName FROM Products 
+#     JOIN Categories ON Products.CategoryID = Categories.CategoryID 
+#     JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID 
+#     ORDER BY ProductID''').fetchall()
+#     return {"products_extended": [{"id": x["ProductID"], "name": f"{x['ProductName']}", "category": f"{x['CategoryName']}", "suppliers": f"{x['CompanyName']}"} for x in products_ext]}
+@app.get("/products_extended", status_code=status.HTTP_200_OK)
 async def products_extended():
     app.db_connection.row_factory = sqlite3.Row
-    products_ext = app.db_connection.execute(f'''SELECT ProductID, ProductName, CategoryName, CompanyName FROM Products 
-    JOIN Categories ON Products.CategoryID = Categories.CategoryID 
-    JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID 
-    ORDER BY ProductID''').fetchall()
-    return {"products_extended": [{"id": x["ProductID"], "name": f"{x['ProductName']}", "category": f"{x['CategoryName']}", "suppliers": f"{x['CompanyName']}"} for x in products_ext]}
+    data = app.db_connection.execute(
+        '''SELECT ProductID AS id, ProductName AS name, CategoryName AS category, CompanyName AS supplier
+        FROM Products 
+        JOIN Categories ON Products.CategoryID = Categories.CategoryID 
+        JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID ORDER BY ProductID'''
+        ).fetchall()
+    return {"products_extended": [d for d in data]}
