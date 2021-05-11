@@ -385,7 +385,7 @@ async def products_extended():
 @app.get("/products/{id}/orders", status_code = status.HTTP_200_OK)
 async def products_orders(id: int, response: Response):
     app.db_connection.row_factory = sqlite3.Row
-    product = app.db_connection.execute(f'''SELECT Orders.OrderID AS orders, CompanyName AS company, Quantity AS quantity, ROUND((UnitPrice*Quantity)-(Discount*(UnitPrice*Quantity)),2) AS total_price
+    product = app.db_connection.execute(f'''SELECT Orders.OrderID AS id, CompanyName AS customer, Quantity AS quantity, ROUND((UnitPrice*Quantity)-(Discount*(UnitPrice*Quantity)),2) AS total_price
         FROM Orders
         JOIN Customers ON Orders.CustomerID = Customers.CustomerID
         JOIN [Order Details] ON Orders.OrderID = [Order Details].OrderID
