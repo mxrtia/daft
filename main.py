@@ -397,96 +397,39 @@ async def products_orders(id: int, response: Response):
         response.status_code = status.HTTP_404_NOT_FOUND
 
 #4.6
-# class Itemm(BaseModel):
-#     name: str
-
-# @app.post("/categories", status_code = status.HTTP_201_CREATED)
-# async def categories_post(itemm: Itemm):   
-#     cats = app.db_connection.execute(f'''INSERT INTO Categories (CategoryName) VALUES ('{itemm.name}')''')
-#     app.db_connection.commit()
-#     new_id = cats.lastrowid
-#     app.db_connection.row_factory = sqlite3.Row
-#     itemm2 = app.db_connection.execute("""SELECT CategoryID AS category_id, CategoryName AS category_name 
-#     FROM Categories 
-#     WHERE CategoryID = ?""", (new_id, )).fetchone()
-#     return itemm2
-    
-# @app.put("/categories/{id}", status_code = status.HTTP_200_OK)
-# async def categories_put(id: int, itemm: Itemm, response: Response):
-#     cats = app.db_connection.execute(f''' SELECT CategoryID 
-#         FROM Categories 
-#         WHERE CategoryID = {id}''').fetchone()
-#     if not cats:
-#         response.status_code = status.HTTP_404_NOT_FOUND
-#     app.db_connection.execute(
-#         f'''UPDATE Categories SET CategoryName = '{itemm.name}' WHERE CategoryID = {id}''')
-#     app.db_connection.commit()
-#     app.db_connection.row_factory = sqlite3.Row
-#     itemm2 = app.db_connection.execute(f'''SELECT CategoryID AS id, CategoryName AS name FROM Categories WHERE CategoryID = {id}''').fetchone()
-#     return itemm2
-
-# @app.delete("/categories/{id}", status_code=status.HTTP_200_OK)
-# async def categories_delete(id: int, response: Response):
-#     cats = app.db_connection.execute(f"SELECT CategoryID FROM Categories WHERE CategoryID = {id}").fetchone()
-#     if not cats:
-#         response.status_code = status.HTTP_404_NOT_FOUND
-#     itemm = app.db_connection.execute(f"DELETE FROM Categories WHERE CategoryID = {id}")
-#     app.db_connection.commit()
-#     return {"deleted": itemm.rowcount}
-
-class Category(BaseModel):
+class Itemm(BaseModel):
     name: str
-@app.post("/categories", status_code=status.HTTP_201_CREATED)
-async def categories_post(category: Category):    
-    cursor = app.db_connection.execute(
-        f'''INSERT INTO Categories (CategoryName) 
-        VALUES ('{category.name}')'''
-        )
-    app.db_connection.commit()
-    new_id = cursor.lastrowid
-    app.db_connection.row_factory = sqlite3.Row
-    data = app.db_connection.execute(
-        f'''SELECT CategoryID AS id, CategoryName AS name 
-        FROM Categories 
-        WHERE CategoryID = {new_id}'''
-        ).fetchone()
-    return data
 
-@app.put("/categories/{id}", status_code=status.HTTP_200_OK)
-async def categories_put(id: int, category: Category):
-    check = app.db_connection.execute(
-        f'''SELECT CategoryID 
+@app.post("/categories", status_code = status.HTTP_201_CREATED)
+async def categories_post(itemm: Itemm):   
+    cats = app.db_connection.execute(f'''INSERT INTO Categories (CategoryName) VALUES ('{itemm.name}')''')
+    app.db_connection.commit()
+    new_id = cats.lastrowid
+    app.db_connection.row_factory = sqlite3.Row
+    itemm2 = app.db_connection.execute("""SELECT CategoryID AS id, CategoryName AS name 
+    FROM Categories 
+    WHERE CategoryID = ?""", (new_id, )).fetchone()
+    return itemm2
+    
+@app.put("/categories/{id}", status_code = status.HTTP_200_OK)
+async def categories_put(id: int, itemm: Itemm, response: Response):
+    cats = app.db_connection.execute(f'''SELECT CategoryID 
         FROM Categories 
-        WHERE CategoryID = {id}'''
-        ).fetchone()
-    if not check:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        WHERE CategoryID = {id}''').fetchone()
+    if not cats:
+        response.status_code = status.HTTP_404_NOT_FOUND
     app.db_connection.execute(
-        f'''UPDATE Categories SET CategoryName = '{category.name}' 
-        WHERE CategoryID = {id}'''
-        )
+        f'''UPDATE Categories SET CategoryName = '{itemm.name}' WHERE CategoryID = {id}''')
     app.db_connection.commit()
     app.db_connection.row_factory = sqlite3.Row
-    data = app.db_connection.execute(
-        f'''SELECT CategoryID AS id, CategoryName AS name 
-        FROM Categories 
-        WHERE CategoryID = {id}'''
-        ).fetchone()
-    return data
+    itemm2 = app.db_connection.execute(f'''SELECT CategoryID AS id, CategoryName AS name FROM Categories WHERE CategoryID = {id}''').fetchone()
+    return itemm2
 
 @app.delete("/categories/{id}", status_code=status.HTTP_200_OK)
-async def categories_delete(id: int):
-    category = app.db_connection.execute(
-        f'''SELECT CategoryID 
-        FROM Categories 
-        WHERE CategoryID = {id}'''
-        ).fetchone()
-    if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    cursor = app.db_connection.execute(
-        f'''DELETE FROM Categories 
-        WHERE CategoryID = {id}'''
-        )
+async def categories_delete(id: int, response: Response):
+    cats = app.db_connection.execute(f"SELECT CategoryID FROM Categories WHERE CategoryID = {id}").fetchone()
+    if not cats:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    itemm = app.db_connection.execute(f"DELETE FROM Categories WHERE CategoryID = {id}")
     app.db_connection.commit()
-    return {"deleted": cursor.rowcount}
-    
+    return {"deleted": itemm.rowcount}
