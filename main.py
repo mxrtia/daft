@@ -489,3 +489,4 @@ async def categories_delete(id: int):
         )
     app.db_connection.commit()
     return {"deleted": cursor.rowcount}
+    
