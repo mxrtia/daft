@@ -379,3 +379,19 @@ async def products_extended():
     JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID 
     ORDER BY ProductID''').fetchall()
     return {"products_extended": [{"id": x["ProductID"], "name": f"{x['ProductName']}", "category": f"{x['CategoryName']}", "supplier": f"{x['CompanyName']}"} for x in products_ext]}
+
+
+#4.5
+@app.get("/products/{id}/orders", status_code = status.HTTP_200_OK)
+async def products_orders(id: int, response: Response):
+    app.db_connection.row_factory = sqlite3.Row
+    product = app.db_connection.execute(f'''SELECT Orders.OrderID AS orders, CompanyName AS company, Quantity AS quantity, ROUND((UnitPrice*Quantity)-(Discount*(UnitPrice*Quantity)),2) AS total_price
+        FROM Orders
+        JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+        JOIN [Order Details] ON Orders.OrderID = [Order Details].OrderID
+        WHERE ProductID = {id}
+        ''').fetchall()
+    if product:        
+        return {"orders": [x for x in product]}
+    else:
+        response.status_code = status.HTTP_404_NOT_FOUND
