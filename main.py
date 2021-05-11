@@ -378,4 +378,4 @@ async def products_extended():
     JOIN Categories ON Products.CategoryID = Categories.CategoryID 
     JOIN Suppliers ON Products.SupplierID = Suppliers.SupplierID 
     ORDER BY ProductID''').fetchall()
-    return {"orders": [{"id": x["ProductID"], "name": f"{x['ProductName']}", "category": f"{x['CategoryName']}", "suppliers": f"{x['CompanyName']}"} for x in products_ext]}
+    return {"products_extended": [{"id": x["ProductID"], "name": f"{x['ProductName']}", "category": f"{x['CategoryName']}", "suppliers": f"{x['CompanyName']}"} for x in products_ext]}
