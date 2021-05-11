@@ -398,7 +398,7 @@ async def products_orders(id: int, response: Response):
 
 #4.6
 class Itemm(BaseModel):
-    name: str
+    name: Optional[str]
 
 @app.post("/categories", status_code = status.HTTP_201_CREATED)
 async def categories_post(itemm: Itemm):   
@@ -409,8 +409,6 @@ async def categories_post(itemm: Itemm):
     itemm = app.db_connection.execute("""SELECT CategoryID AS category_id, CategoryName AS category_name 
     FROM Categories 
     WHERE CategoryID = ?""", (new_id, )).fetchone()
-
-    # return {"id": cats.lastrowid, "name": item.name}
     return itemm
     
 @app.put("/categories/{id}", status_code = status.HTTP_200_OK)
@@ -422,8 +420,7 @@ async def categories_put(id: int, itemm: Itemm, response: Response):
         response.status_code = status.HTTP_404_NOT_FOUND
 
     app.db_connection.execute(
-        f'''UPDATE Categories SET CategoryName = '{itemm.name}' 
-        WHERE CategoryID = {id}'''
+        f'''UPDATE Categories SET CategoryName = '{itemm.name}' WHERE CategoryID = {id}'''
         )
 
     app.db_connection.commit()
@@ -437,13 +434,9 @@ async def categories_put(id: int, itemm: Itemm, response: Response):
 
 @app.delete("/categories/{id}", status_code=status.HTTP_200_OK)
 async def categories_delete(id: int, response: Response):
-    cats = app.db_connection.execute(
-        f'''SELECT CategoryID 
-        FROM Categories 
-        WHERE CategoryID = {id}'''
-        ).fetchone()
+    cats = app.db_connection.execute(f"SELECT CategoryID FROM Categories WHERE CategoryID = {id}").fetchone()
     if not cats:
         response.status_code = status.HTTP_404_NOT_FOUND
-    cursor = app.db_connection.execute(f'''DELETE FROM Categories WHERE CategoryID = {id}''')
+    itemm = app.db_connection.execute(f"DELETE FROM Categories WHERE CategoryID = {id}")
     app.db_connection.commit()
-    return {"deleted": cursor.rowcount}
+    return {"deleted": itemm.rowcount}
