@@ -413,4 +413,37 @@ async def categories_post(itemm: Itemm):
     # return {"id": cats.lastrowid, "name": item.name}
     return itemm
     
-# @app.
+@app.put("/categories/{id}", status_code = status.HTTP_200_OK)
+async def categories_put(id: int, itemm: Itemm, response: Response):
+    cats = app.db_connection.execute(f''' SELECT CategoryID 
+        FROM Categories 
+        WHERE CategoryID = {id}''').fetchone()
+    if not cats:
+        response.status_code = status.HTTP_404_NOT_FOUND
+
+    app.db_connection.execute(
+        f'''UPDATE Categories SET CategoryName = '{itemm.name}' 
+        WHERE CategoryID = {id}'''
+        )
+
+    app.db_connection.commit()
+    app.db_connection.row_factory = sqlite3.Row
+    itemm = app.db_connection.execute(
+        f'''SELECT CategoryID AS id, CategoryName AS name 
+        FROM Categories 
+        WHERE CategoryID = {id}'''
+        ).fetchone()
+    return itemm
+
+@app.delete("/categories/{id}", status_code=status.HTTP_200_OK)
+async def categories_delete(id: int, response: Response):
+    cats = app.db_connection.execute(
+        f'''SELECT CategoryID 
+        FROM Categories 
+        WHERE CategoryID = {id}'''
+        ).fetchone()
+    if not cats:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    cursor = app.db_connection.execute(f'''DELETE FROM Categories WHERE CategoryID = {id}''')
+    app.db_connection.commit()
+    return {"deleted": cursor.rowcount}
