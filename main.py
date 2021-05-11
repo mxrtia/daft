@@ -433,6 +433,9 @@ async def products_orders(id: int, response: Response):
 #     itemm = app.db_connection.execute(f"DELETE FROM Categories WHERE CategoryID = {id}")
 #     app.db_connection.commit()
 #     return {"deleted": itemm.rowcount}
+
+class Category(BaseModel):
+    name: str
 @app.post("/categories", status_code=status.HTTP_201_CREATED)
 async def categories_post(category: Category):    
     cursor = app.db_connection.execute(
