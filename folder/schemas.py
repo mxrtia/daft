@@ -28,7 +28,7 @@ class Supplier2(BaseModel):
 
 
 class SupplierPost(BaseModel):
-    SupplierID: int
+    SupplierID: int = 0
     CompanyName: constr(max_length=60)
     ContactName: Optional[constr(max_length=60)]
     ContactTitle: Optional[constr(max_length=60)]
