@@ -23,6 +23,7 @@ async def get_suppliers(db: Session = Depends(get_db)):
     return crud.get_suppliers(db)
 
 
+
 #############################
 
 
