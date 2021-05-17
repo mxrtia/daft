@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 
 from . import models, schemas
+from sqlalchemy.sql.expression import func, update
+
 
 
 def get_suppliers(db: Session):
@@ -21,7 +23,7 @@ def create_supplier(db: Session, new_supplier: schemas.NewSupplier):
     db.add(models.Supplier(**new_supplier.dict()))
     db.commit()
     return get_supplier(db, highest_id + 1)
-    
+
 def post_supplier(db: Session, new_supplier: schemas.SupplierPost):
     properties_to_update = {key: value for key, value in post_supplier.dict().items() if value is not None}
     update_statement = update(models.Supplier) \
