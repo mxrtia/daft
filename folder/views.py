@@ -33,8 +33,8 @@ async def get_suppliers_products(id: PositiveInt, db: Session = Depends(get_db))
     
 
 @router.post("/suppliers", response_model=schemas.Supplier, status_code=201)
-async def post_supplier(supplier_post: schemas.SupplierPost, db: Session = Depends(get_db)):
-    return crud.supplier_post(db, supplier_post)
+async def post_supplier(post_supplier: schemas.SupplierPost, db: Session = Depends(get_db)):
+    return crud.supplier_post(db, post_supplier)
 
 
 
