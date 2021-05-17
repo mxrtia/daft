@@ -17,7 +17,8 @@ def get_supplier(db: Session, id: int):
 def get_suppliers_products(db: Session, id: int):
     return db.query(models.Product).filter(models.Product.SupplierID == id).order_by(models.Product.ProductID.desc()).all()
 
-def create_supplier(db: Session, new_supplier: schemas.NewSupplier):
+#############
+def create_supplier(db: Session, new_supplier: schemas.SupplierPost):
     highest_id = db.query(func.max(models.Supplier.SupplierID)).scalar()
     new_supplier.SupplierID = highest_id + 1
     db.add(models.Supplier(**new_supplier.dict()))
@@ -26,13 +27,11 @@ def create_supplier(db: Session, new_supplier: schemas.NewSupplier):
 
 def post_supplier(db: Session, new_supplier: schemas.SupplierPost):
     properties_to_update = {key: value for key, value in post_supplier.dict().items() if value is not None}
-    update_statement = update(models.Supplier) \
-                       .where(models.Supplier.SupplierID == id) \
-                       .values(**properties_to_update)
+    update_statement = update(models.Supplier).where(models.Supplier.SupplierID == id).values(**properties_to_update)
     db.execute(update_statement)
     db.commit()
     return get_supplier(db, id)
-
+##############
 
 
 ######################    
