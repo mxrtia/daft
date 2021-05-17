@@ -21,7 +21,7 @@ class Supplier2(BaseModel):
     Country: Optional[constr(max_length=50)]
     Phone: Optional[constr(max_length=50)]
     Fax: Optional[constr(max_length=50)]
-    HomePage: Optional[constr(max_length=50)]
+    HomePage: Optional[str]
 
     class Config:
         orm_mode = True
