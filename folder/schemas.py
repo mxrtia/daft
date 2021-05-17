@@ -1,5 +1,5 @@
 from pydantic import BaseModel, PositiveInt, constr
-from typing import Optional
+from typing import Optional, List
 
 
 class Supplier(BaseModel):
@@ -26,6 +26,23 @@ class Supplier2(BaseModel):
     class Config:
         orm_mode = True
 
+
+class Category(BaseModel):
+    CategoryID: PositiveInt
+    CategoryName: Optional[constr(max_length=50)]
+
+    class Config:
+        orm_mode = True
+
+
+class Products(BaseModel):
+    ProductID: PositiveInt
+    ProductName: Optional[constr(max_length=50)]
+    Category: List[Category]
+    Discontinued: Optional[constr(max_length=50)]
+
+    class Config:
+        orm_mode = True
 
 ######################
 

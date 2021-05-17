@@ -1,3 +1,5 @@
+from sqlalchemy.orm import relationship
+
 from sqlalchemy import (
     Column,
     Date,
@@ -24,6 +26,7 @@ class Category(Base):
     Description = Column(Text)
     Picture = Column(LargeBinary)
 
+    products = relationship('Product', back_populates='category')
 
 class Customercustomerdemo(Base):
     __tablename__ = "customercustomerdemo"
@@ -128,6 +131,8 @@ class Product(Base):
     ReorderLevel = Column(SmallInteger)
     Discontinued = Column(Integer, nullable=False)
 
+    supplier = relationship('Supplier', back_populates='products')
+    category = relationship('Category', lazy='immediate', back_populates='products')
 
 class Region(Base):
     __tablename__ = "region"
@@ -167,6 +172,9 @@ class Supplier(Base):
     Phone = Column(String(24))
     Fax = Column(String(24))
     HomePage = Column(Text)
+
+    products = relationship('Product', back_populates='supplier')
+
 
 
 class Territory(Base):
