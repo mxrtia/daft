@@ -3,8 +3,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from folder.views import router as northwind_api_router
 from pydantic import PositiveInt
 from sqlalchemy.orm import Session
-from .database import get_db
-from . import crud, schemas
+from folder.database import get_db
+from folder import crud, schemas
 
 
 app = FastAPI()
