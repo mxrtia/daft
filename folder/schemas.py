@@ -57,6 +57,22 @@ class SupplierUpdate(BaseModel):
     class Config:
         orm_mode = True
 
+class SupplierPut(BaseModel):
+    SupplierID: PositiveInt
+    CompanyName: Optional[constr(max_length=50)]
+    ContactName: Optional[constr(max_length=50)]
+    ContactTitle: Optional[constr(max_length=50)]
+    Address: Optional[constr(max_length=50)]
+    City: Optional[constr(max_length=50)]
+    PostalCode: Optional[constr(max_length=50)]
+    Country: Optional[constr(max_length=50)]
+    Phone: Optional[constr(max_length=50)]
+    Fax: Optional[constr(max_length=50)]
+    HomePage: Optional[str]
+
+    class Config:
+        orm_mode = True
+
 class Category(BaseModel):
     CategoryID: PositiveInt
     CategoryName: Optional[constr(max_length=50)]
