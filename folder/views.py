@@ -30,11 +30,15 @@ async def get_suppliers_products(id: PositiveInt, db: Session = Depends(get_db))
         raise HTTPException(status_code=404)
     return db_products
 
-    
 
 @router.post("/suppliers", response_model=schemas.Supplier, status_code=201)
-async def post_supplier(post_supplier: schemas.SupplierPost, db: Session = Depends(get_db)):
-    return crud.post_supplier(db, post_supplier)
+async def create_supplier(new_supplier: schemas.NewSupplier, db: Session = Depends(database.get_db)):
+    return crud.create_supplier(db, new_supplier)
+    
+
+# @router.post("/suppliers", response_model=schemas.Supplier, status_code=201)
+# async def post_supplier(new_supplier: schemas.SupplierPost, db: Session = Depends(get_db)):
+#     return crud.post_supplier(db, new_supplier)
 
 
 
