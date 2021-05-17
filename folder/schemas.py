@@ -43,7 +43,7 @@ class SupplierPost(BaseModel):
 
 
 class SupplierUpdate(BaseModel):
-    CompanyName: Optional[constr(max_length=60)]
+    CompanyName: constr(max_length=60)
     ContactName: Optional[constr(max_length=60)]
     ContactTitle: Optional[constr(max_length=60)]
     Address: Optional[constr(max_length=60)]
