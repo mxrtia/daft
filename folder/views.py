@@ -10,9 +10,9 @@ from .database import get_db
 router = APIRouter()
 
 
-@router.get("/suppliers/{supplier_id}", response_model=schemas.Supplier)
-async def get_supplier(supplier_id: PositiveInt, db: Session = Depends(get_db)):
-    db_supplier = crud.get_supplier(db, supplier_id)
+@router.get("/suppliers/{id}", response_model=schemas.Supplier)
+async def get_supplier(id: PositiveInt, db: Session = Depends(get_db)):
+    db_supplier = crud.get_supplier(db, id)
     if db_supplier is None:
         raise HTTPException(status_code=404, detail="Supplier not found")
     return db_supplier

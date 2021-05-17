@@ -4,12 +4,12 @@ from . import models
 
 
 def get_suppliers(db: Session):
-    return db.query(models.Supplier).order_by(models.Supplier.SupplierID == supplier_id).all()
+    return db.query(models.Supplier).order_by(models.Supplier.SupplierID).all()
 
 
-def get_supplier(db: Session, supplier_id: int):
+def get_supplier(db: Session, id: int):
     return (
-        db.query(models.Supplier).filter(models.Supplier.SupplierID == supplier_id).first()
+        db.query(models.Supplier).filter(models.Supplier.SupplierID == id).first()
     )
 
 ######################    
