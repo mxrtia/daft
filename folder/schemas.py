@@ -11,7 +11,7 @@ class Supplier(BaseModel):
 
 class Supplier2(BaseModel):
     SupplierID: PositiveInt
-    CompanyName: Optional[constr(max_length=50)]
+    CompanyName: constr(max_length=50)
     ContactName: Optional[constr(max_length=50)]
     ContactTitle: Optional[constr(max_length=50)]
     Address: Optional[constr(max_length=50)]
@@ -59,7 +59,7 @@ class SupplierUpdate(BaseModel):
 
 class SupplierPut(BaseModel):
     SupplierID: PositiveInt
-    CompanyName: Optional[constr(max_length=50)]
+    CompanyName: constr(max_length=50)
     ContactName: Optional[constr(max_length=50)]
     ContactTitle: Optional[constr(max_length=50)]
     Address: Optional[constr(max_length=50)]
