@@ -10,6 +10,7 @@ from sqlalchemy import (
     String,
     Table,
     Text,
+    ForeignKey
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.sqltypes import NullType
@@ -122,8 +123,8 @@ class Product(Base):
 
     ProductID = Column(SmallInteger, primary_key=True)
     ProductName = Column(String(40), nullable=False)
-    SupplierID = Column(SmallInteger)
-    CategoryID = Column(SmallInteger)
+    SupplierID = Column(SmallInteger, ForeignKey("suppliers.SupplierID"))
+    CategoryID = Column(SmallInteger, ForeignKey("categories.CategoryID"))
     QuantityPerUnit = Column(String(20))
     UnitPrice = Column(Float)
     UnitsInStock = Column(SmallInteger)
