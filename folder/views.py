@@ -23,9 +23,19 @@ async def get_suppliers(db: Session = Depends(get_db)):
     return crud.get_suppliers(db)
 
 
-@router.get("/suppliers/{id}/products", response_model = schemas.Products)
+@router.get("/suppliers/{id}/products", response_model = List[schemas.Products])
 async def get_suppliers_products(id: PositiveInt, db: Session = Depends(get_db)):
-    return crud.get_suppliers_products(db, id)
+    db_products = crud.get_suppliers_products(db, id)
+    if not db_products:
+        raise HTTPException(status_code=404)
+    return db_products
+
+    
+
+@router.post("/suppliers", response_model=schemas.Supplier, status_code=status.HTTP_201_CREATED)
+async def post_supplier(supplier_post: schemas.SupplierPost, db: Session = Depends(get_db)):
+    return crud.supplier_post(db, supplier_post)
+
 
 
 

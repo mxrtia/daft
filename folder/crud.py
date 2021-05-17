@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from . import models
+from . import models, schemas
 
 
 def get_suppliers(db: Session):
@@ -14,6 +14,17 @@ def get_supplier(db: Session, id: int):
 
 def get_suppliers_products(db: Session, id: int):
     return db.query(models.Product).filter(models.Product.SupplierID == id).order_by(models.Product.ProductID.desc()).all()
+
+def post_supplier(db: Session, id: int, post_supplier: schemas.SupplierPost):
+    properties_to_update = {key: value for key, value in post_supplier.dict().items() if value is not None}
+    update_statement = update(models.Supplier) \
+                       .where(models.Supplier.SupplierID == id) \
+                       .values(**properties_to_update)
+    db.execute(update_statement)
+    db.commit()
+    return get_supplier(db, id)
+
+
 
 ######################    
 
