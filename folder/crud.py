@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 from sqlalchemy.sql.expression import func, update
 
-
+#5.1
 
 def get_suppliers(db: Session):
     return db.query(models.Supplier).order_by(models.Supplier.SupplierID).all()
@@ -14,8 +14,10 @@ def get_supplier(db: Session, id: int):
         db.query(models.Supplier).filter(models.Supplier.SupplierID == id).first()
     )
 
+#5.2
+
 def get_suppliers_products(db: Session, id: int):
-    return db.query(models.Product).filter(models.Product.SupplierID == id).order_by(models.Product.ProductID.desc()).all()
+    return db.query(models.Product.ProductID, models.Product.ProductName, models.Product.CategoryID, models.Category.CategoryName, models.Product.Discontinued).filter(models.Product.SupplierID == id, models.Product.CategoryID == models.Category.CategoryID).order_by(models.Product.ProductID.desc()).all()
 
 #5.3
 def create_supplier(db: Session, new_supplier: schemas.SupplierPost):
@@ -24,13 +26,6 @@ def create_supplier(db: Session, new_supplier: schemas.SupplierPost):
     db.add(models.Supplier(**new_supplier.dict()))
     db.commit()
     return get_supplier(db, highest_id + 1)
-
-# def post_supplier(db: Session, new_supplier: schemas.SupplierPost):
-#     properties_to_update = {key: value for key, value in post_supplier.dict().items() if value is not None}
-#     update_statement = update(models.Supplier).where(models.Supplier.SupplierID == id).values(**properties_to_update)
-#     db.execute(update_statement)
-#     db.commit()
-#     return get_supplier(db, id)
 
 #5.4
 def put_supplier(db: Session, id: int, put_supplier: schemas.SupplierPut):
@@ -43,6 +38,8 @@ def put_supplier(db: Session, id: int, put_supplier: schemas.SupplierPut):
     db.commit()
     db.refresh(db_supplier)
     return db_supplier
+
+#5.5
 
 def delete_supplier(db: Session, id: int):
     db.query(models.Supplier).filter(models.Supplier.SupplierID == id).delete()
