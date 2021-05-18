@@ -34,11 +34,16 @@ def create_supplier(db: Session, new_supplier: schemas.SupplierPost):
 
 #5.4
 def put_supplier(db: Session, id: int, put_supplier: schemas.SupplierPut):
-    properties_to_update = {key: value for key, value in put_supplier.dict().items() if value is not None}
-    update_statement = update(models.Supplier).where(models.Supplier.SupplierID == id).values(**properties_to_update)
-    db.execute(update_statement)
+    db_supplier = db.query(models.Supplier).filter(models.Supplier.SupplierID == id).one_or_none()
+    if db_supplier is None:
+        return None
+    for var, value in vars(put_supplier).items():
+        setattr(db_supplier, var, value) if value else None
+    db.add(db_supplier)
     db.commit()
-    return get_supplier(db, id)
+    db.refresh(db_supplier)
+    return db_supplier
+
 
 ######################    
 
