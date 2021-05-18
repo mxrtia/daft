@@ -44,6 +44,9 @@ def put_supplier(db: Session, id: int, put_supplier: schemas.SupplierPut):
     db.refresh(db_supplier)
     return db_supplier
 
+def delete_supplier(db: Session, id: int):
+    db.query(models.Supplier).filter(models.Supplier.SupplierID == id).delete()
+    db.commit()
 
 ######################    
 

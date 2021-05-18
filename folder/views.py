@@ -45,6 +45,13 @@ async def put_supplier(id: PositiveInt, put_supplier: schemas.SupplierPut, db: S
     return db_supplier
 
 
+@router.delete("/suppliers/{id}", status_code=204)
+async def delete_supplier(id: PositiveInt, db: Session = Depends(get_db)):
+    db_supplier = crud.get_supplier(db, id)
+    if db_supplier is None:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    crud.delete_supplier(db, id)
+
 #############################
 
 
