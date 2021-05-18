@@ -20,8 +20,8 @@ class Supplier2(BaseModel):
     PostalCode: Optional[constr(max_length=50)]
     Country: Optional[constr(max_length=50)]
     Phone: Optional[constr(max_length=50)]
-    Fax: Optional[constr(max_length=50)]
-    HomePage: Optional[str]
+    Fax: Optional[constr(max_length=50)] = None
+    HomePage: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -58,8 +58,7 @@ class SupplierUpdate(BaseModel):
         orm_mode = True
 
 class SupplierPut(BaseModel):
-    SupplierID: PositiveInt
-    CompanyName: constr(max_length=50)
+    CompanyName: Optional[constr(max_length=50)]
     ContactName: Optional[constr(max_length=50)]
     ContactTitle: Optional[constr(max_length=50)]
     Address: Optional[constr(max_length=50)]
@@ -67,8 +66,8 @@ class SupplierPut(BaseModel):
     PostalCode: Optional[constr(max_length=50)]
     Country: Optional[constr(max_length=50)]
     Phone: Optional[constr(max_length=50)]
-    Fax: Optional[constr(max_length=50)]
-    HomePage: Optional[str]
+    Fax: Optional[constr(max_length=50)] = None
+    HomePage: Optional[str] = None
 
     class Config:
         orm_mode = True
